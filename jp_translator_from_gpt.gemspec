@@ -3,14 +3,14 @@
 require_relative "lib/jp_translator_from_gpt/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "jp-translator-from-gpt"
+  spec.name = "jp_translator_from_gpt"
   spec.version = JpTranslatorFromGpt::VERSION
   spec.authors = ["milkeclair"]
   spec.email = ["milkeclair.noreply@gmail.com"]
 
   spec.summary = "translate to japanese"
   spec.description = "gpt-4o-miniを使って日本語に翻訳する"
-  spec.homepage = "https://github.com/milkeclair/jp-translator-from-gpt"
+  spec.homepage = "https://github.com/milkeclair/jp_translator_from_gpt"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 
