@@ -14,7 +14,7 @@ RSpec.describe JpTranslatorFromGpt do
       end
     end
 
-    describe "#translate_to_jp" do
+    describe "#translate" do
       let(:text) { "Hello, world!" }
       let(:response) do
         {
@@ -24,13 +24,13 @@ RSpec.describe JpTranslatorFromGpt do
         }
       end
 
-      it "日本語に翻訳されたテキストが返る" do
+      it "翻訳されたテキストが返る" do
         allow(translator).to receive(:chat_to_api).and_return(response)
         # 不要な出力を抑制
         allow(translator).to receive(:puts)
         allow(JpTranslatorFromGpt::Writer).to receive(:write_logs)
 
-        expect(translator.translate_to_jp(text)).to be_a(String)
+        expect(translator.translate(text)).to be_a(String)
       end
 
       it "Writer#write_logsが呼ばれる" do
@@ -39,7 +39,7 @@ RSpec.describe JpTranslatorFromGpt do
         allow(translator).to receive(:puts)
         allow(JpTranslatorFromGpt::Writer).to receive(:write_logs)
 
-        translator.translate_to_jp(text)
+        translator.translate(text)
 
         expect(JpTranslatorFromGpt::Writer).to have_received(:write_logs).with(response)
       end

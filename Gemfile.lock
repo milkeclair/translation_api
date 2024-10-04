@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jp_translator_from_gpt (1.0.3)
+    jp_translator_from_gpt (1.1.0)
       dotenv (~> 3.1.4)
       ruby-openai (~> 7.1.0)
 

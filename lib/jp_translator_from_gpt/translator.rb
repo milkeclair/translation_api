@@ -7,10 +7,12 @@ require_relative "writer"
 module JpTranslatorFromGpt
   class Translator
     SYSTEM_CONTENT_BASE = <<~TEXT
-      Translate only. Return result only, no extra info. Keep symbols.
+      Translate only.
+      Return result only, no extra info
+      Keep symbols
     TEXT
 
-    def initialize(output_logs: true, except_words: [])
+    def initialize(output_logs: true, except_words: [], exchange_language: "japanese")
       # 環境変数の読み込み
       Dotenv.load
 
@@ -20,19 +22,21 @@ module JpTranslatorFromGpt
       )
       @output_logs = output_logs
       @system_content = SYSTEM_CONTENT_BASE + except_option_text(except_words)
+      @exchange_language = exchange_language
     end
 
     # テキストを日本語に翻訳し、結果をファイルに書き込む
     #
     # @param [String] text 翻訳するテキスト
     # @return [void]
-    def translate_to_jp(text)
+    def translate(text)
+      # 空白文字は翻訳する必要がない
+      return text if text.strip.empty?
+
       response = chat_to_api(text)
       Writer.write_logs(response) if @output_logs
 
-      translated_text = response["choices"][0]["message"]["content"]
-      puts translated_text
-      translated_text
+      response["choices"][0]["message"]["content"]
     end
 
     # レスポンスから使用したトークン数を取得する
@@ -60,7 +64,7 @@ module JpTranslatorFromGpt
           model: ENV["OPENAI_MODEL"] || "gpt-4o-mini",
           messages: [
             { role: "system", content: @system_content },
-            { role: "user", content: "please translate this to Japanese: #{text}" }
+            { role: "user", content: user_prompt_text(text) }
           ]
         }
       )
@@ -74,7 +78,17 @@ module JpTranslatorFromGpt
       return "" if except_words.empty?
 
       <<~TEXT
-        Words listed next are not translated: #{except_words.join(", ")}
+        Words listed next are not translated: [#{except_words.join(", ")}]
+      TEXT
+    end
+
+    # ユーザー入力のプロンプト
+    #
+    # @param [String] text テキスト
+    # @return [String] ユーザー入力のプロンプト
+    def user_prompt_text(text)
+      <<~TEXT
+        Please translate this text to #{@exchange_language}: #{text}
       TEXT
     end
   end
