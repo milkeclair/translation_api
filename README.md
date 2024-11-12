@@ -1,17 +1,28 @@
-## 概要
+# TranslationAPI
 
-ChatGPTを使って文字列を日本語に翻訳する  
-OpenAIのAPIキーが必要  
-`.env`を作成し、`OPENAI_API_KEY=YOUR_API_KEY`を追加する  
-`ENV["OPENAI_MODEL"]`がない場合は、[gpt-4o-mini](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/)をデフォルトで使用する  
+Translate using APIs.  
+Requires api key.  
 
-* 翻訳されたテキスト
-* 使用したトークン数
-* 掛かった金額([参考](https://openai.com/api/pricing/))
+## For OpenAI
 
-が出力される  
+1. `touch .env`
+2. Add `OPENAI_API_KEY=YOUR_API_KEY`  
+3. Optional: `ENV["OPENAI_MODEL"]`(default: gpt-4o-mini)
+4. `TranslationAPI::Mediator.new.translate("text")`
 
-## 使用例
+### Init Options
 
-詳しくは、example.rbを参照  
-`ruby example.rb "text"`で実行できる
+* output_logs (default: true)  
+* language (default: "japanese")  
+* agent (default: :openai)  
+* except_words (default: [])  
+
+### Output
+
+* Translated_text
+* Used Tokens
+* Cost Spent(https://openai.com/api/pricing/)
+
+## Example
+
+Exec `ruby example.rb "text"`
