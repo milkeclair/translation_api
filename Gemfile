@@ -15,6 +15,7 @@ gem "rubocop-rspec", "~> 3.0.5"
 
 gem "yard", "~> 0.9.37"
 
+gem "deepl-rb", "~> 2.5"
 gem "ruby-openai", "~> 7.1.0"
 
 gem "dotenv", "~> 3.1.4"
