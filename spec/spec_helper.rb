@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "jp_translator_from_gpt"
+require "translation_api"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

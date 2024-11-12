@@ -2,42 +2,64 @@
 
 require "fileutils"
 require_relative "calculator"
+require_relative "openai"
 
-module JpTranslatorFromGpt
+module TranslationAPI
   class Writer
+    @agent = nil
+
     # ログをファイルに書き込む
+    #
+    # @param [Object] agent 翻訳エージェントのインスタンス
+    # @param [Hash] response 翻訳した結果
+    # @return [void]
+    def self.write_logs(agent, response)
+      # 例: "Hoge::Fuga" => "fuga"
+      @agent = agent.class.to_s.split("::").last.downcase
+      handle_agent(response)
+    end
+
+    # エージェントに対応したログ書き込み用メソッドを呼び出す
+    #
+    # @param [Hash] response 翻訳した結果
+    # @return [void]
+    def self.handle_agent(response)
+      method_name = "write_#{@agent}_logs"
+      send(method_name, response)
+    end
+
+    # OpenAIのログをファイルに書き込む
     #
     # @param [Hash] response OpenAI APIからのレスポンス
     # @return [void]
-    def self.write_logs(response)
-      input_tokens = Translator.dig_used_tokens(response, "input")
-      output_tokens = Translator.dig_used_tokens(response, "output")
+    def self.write_openai_logs(response)
+      input_tokens = OpenAI.dig_used_tokens(response, "input")
+      output_tokens = OpenAI.dig_used_tokens(response, "output")
 
-      write_translated_text(response)
+      write_translated_text(response["choices"][0]["message"]["content"])
       write_used_tokens(input_tokens, output_tokens)
       write_total_cost(input_tokens, output_tokens)
     end
 
     # 出力先のテキストファイルのパスを返す
-    # main.rbから見たパスで指定している
+    # example.rbから見たパスで指定している
     #
     # @param [String] under_logs_path translator_logsディレクトリ配下のパス
     # @return [String] 出力先のテキストファイルのパス
     def self.text_path(under_logs_path)
-      output_dir = "translator_logs"
+      output_dir = "translator_logs/#{@agent}"
       FileUtils.mkdir_p(output_dir) unless File.directory?(output_dir)
-      File.join("translator_logs", under_logs_path)
+      File.join(output_dir, under_logs_path)
     end
 
     # 翻訳されたテキストをファイルに書き込み、ターミナルに出力する
     # テキストはファイルの末尾に追記される
     #
-    # @param [Hash] response OpenAI APIからのレスポンス
+    # @param [Hash] translated_text 翻訳されたテキスト
     # @return [void]
-    def self.write_translated_text(response)
+    def self.write_translated_text(translated_text)
       log_file_path = text_path("translated_text.txt")
       File.open(log_file_path, "a") do |file|
-        translated_text = response["choices"][0]["message"]["content"]
         file.puts(translated_text)
       end
     end
