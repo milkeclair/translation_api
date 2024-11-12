@@ -4,25 +4,32 @@ require "dotenv"
 require "openai"
 require_relative "writer"
 
-module JpTranslatorFromGpt
-  class Translator
+module TranslationAPI
+  class OpenAI
     SYSTEM_CONTENT_BASE = <<~TEXT
       Translate only.
       Return result only, no extra info
       Keep symbols
     TEXT
 
-    def initialize(output_logs: true, except_words: [], exchange_language: "japanese")
+    # OpenAI APIを使用してテキストを翻訳する
+    #
+    # @param [Boolean] output_logs ログを出力するかどうか
+    # @param [Array<String>] except_words 除外する単語のリスト
+    # @param [String] language 翻訳先の言語
+    # @return [void]
+    def initialize(output_logs: true, except_words: [], language: "japanese")
       # 環境変数の読み込み
       Dotenv.load
+      raise "API key is not found" unless ENV["OPENAI_API_KEY"]
 
-      @client = OpenAI::Client.new(
+      @client = ::OpenAI::Client.new(
         access_token: ENV["OPENAI_API_KEY"],
         log_errors: true # 好み
       )
       @output_logs = output_logs
       @system_content = SYSTEM_CONTENT_BASE + except_option_text(except_words)
-      @exchange_language = exchange_language
+      @language = language
     end
 
     # テキストを日本語に翻訳し、結果をファイルに書き込む
@@ -34,7 +41,7 @@ module JpTranslatorFromGpt
       return text if text.strip.empty?
 
       response = chat_to_api(text)
-      Writer.write_logs(response) if @output_logs
+      Writer.write_logs(self, response) if @output_logs
 
       response["choices"][0]["message"]["content"]
     end
@@ -88,7 +95,7 @@ module JpTranslatorFromGpt
     # @return [String] ユーザー入力のプロンプト
     def user_prompt_text(text)
       <<~TEXT
-        Please translate this text to #{@exchange_language}: #{text}
+        Please translate this text to #{@language}: #{text}
       TEXT
     end
   end

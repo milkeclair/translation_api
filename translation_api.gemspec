@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative "lib/jp_translator_from_gpt/version"
+require_relative "lib/translation_api/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "jp_translator_from_gpt"
-  spec.version = JpTranslatorFromGpt::VERSION
+  spec.name = "translation_api"
+  spec.version = TranslationAPI::VERSION
   spec.authors = ["milkeclair"]
   spec.email = ["milkeclair.noreply@gmail.com"]
 
-  spec.summary = "translate to japanese"
-  spec.description = "gpt-4o-miniを使って日本語に翻訳する"
-  spec.homepage = "https://github.com/milkeclair/jp_translator_from_gpt"
+  spec.summary = "translate"
+  spec.description = "translate"
+  spec.homepage = "https://github.com/milkeclair/translation_api"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 

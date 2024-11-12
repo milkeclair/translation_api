@@ -2,11 +2,11 @@
 
 require_relative "writer"
 
-module JpTranslatorFromGpt
+module TranslationAPI
   class Calculator
     class ArgumentError < StandardError; end
     MODEL_ERROR_MESSAGE =
-      "設定に無いモデルです。モデルをmodules/writerに追加するか、ENV[\"OPENAI_MODEL\"]を変更してください。"
+      "設定に無いモデルです。.envを確認してください。"
 
     # トークン数から利用料金を計算する
     #
@@ -60,17 +60,7 @@ module JpTranslatorFromGpt
     def self.validate_model(model, token_rate)
       return if token_rate.key?(model)
 
-      clear_files
       raise Calculator::ArgumentError, MODEL_ERROR_MESSAGE
-    end
-
-    # ファイルの内容を削除する
-    #
-    # @return [void]
-    def self.clear_files
-      File.write(Writer.text_path("translated_text.txt"), "")
-      File.write(Writer.text_path("tokens.txt"), "")
-      File.write(Writer.text_path("cost.txt"), "")
     end
   end
 end
