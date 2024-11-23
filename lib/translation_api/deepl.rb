@@ -10,13 +10,14 @@ module TranslationAPI
       setup_deepl_config!(pro: pro)
       @supported_languages = fetch_supported_languages
       validate_supported!(language)
+      @system_content = except_option_text(except_words)
       @language = @supported_languages[language.to_sym]
     end
 
     def translate(text)
       return text if text.strip.empty?
 
-      p ::DeepL.translate(text, nil, @language)
+      p ::DeepL.translate(text, nil, @language, context: @system_content).text
     end
 
     private
@@ -44,6 +45,14 @@ module TranslationAPI
 
     def supported?(lang)
       @supported_languages.key?(lang.to_sym)
+    end
+
+    def except_option_text(except_words)
+      return "" if except_words.empty?
+
+      <<~TEXT
+        Words listed next are not translated: [#{except_words.join(", ")}]
+      TEXT
     end
   end
 end
