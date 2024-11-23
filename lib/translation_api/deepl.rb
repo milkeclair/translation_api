@@ -5,12 +5,16 @@ require "deepl"
 
 module TranslationAPI
   class DeepL
+    SYSTEM_CONTENT_BASE = <<~TEXT
+      Keep symbols
+    TEXT
+
     def initialize(output_logs: true, except_words: [], language: "japanese", pro: false)
       Dotenv.load
       setup_deepl_config!(pro: pro)
       @supported_languages = fetch_supported_languages
       validate_supported!(language)
-      @system_content = except_option_text(except_words)
+      @system_content = SYSTEM_CONTENT_BASE + except_option_text(except_words)
       @language = @supported_languages[language.to_sym]
     end
 
