@@ -21,7 +21,7 @@ module TranslationAPI
     def translate(text)
       return text if text.strip.empty?
 
-      p ::DeepL.translate(text, nil, @language, context: @system_content).text
+      ::DeepL.translate(text, nil, @language, context: @system_content).text
     end
 
     private
