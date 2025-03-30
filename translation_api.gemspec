@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
+  spec.add_dependency "deepl-rb", "~> 2.5.3"
   spec.add_dependency "dotenv", "~> 3.1.4"
   spec.add_dependency "ruby-openai", "~> 7.1.0"
 
