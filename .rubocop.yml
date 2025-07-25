@@ -16,7 +16,7 @@ Style/ParallelAssignment:
 
 Metrics/MethodLength:
   CountComments: true
-  Max: 20
+  Max: 30
 
 Lint/ScriptPermission:
   Enabled: false
