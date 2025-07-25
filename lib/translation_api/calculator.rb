@@ -48,6 +48,18 @@ module TranslationAPI
         "gpt-4o-mini" => {
           input: 0.15 / one_million,
           output: 0.6 / one_million
+        },
+        "gpt-4.1" => {
+          input: 2.0 / one_million,
+          output: 8.0 / one_million
+        },
+        "gpt-4.1-mini" => {
+          input: 0.4 / one_million,
+          output: 1.6 / one_million
+        },
+        "gpt-4.1-nano" => {
+          input: 0.1 / one_million,
+          output: 0.4 / one_million
         }
       }
     end

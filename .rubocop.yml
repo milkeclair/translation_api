@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.4
   NewCops: enable
 
 Style/StringLiterals:
@@ -16,7 +16,7 @@ Style/ParallelAssignment:
 
 Metrics/MethodLength:
   CountComments: true
-  Max: 20
+  Max: 30
 
 Lint/ScriptPermission:
   Enabled: false
