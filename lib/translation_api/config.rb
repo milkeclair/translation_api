@@ -8,8 +8,8 @@ class TranslationAPI
 
     attr_accessor :language, :provider, :output_logs, :except_words
 
-    def self.configure(&)
-      instance.instance_exec(&)
+    def self.configure(&block)
+      block.call(instance)
     end
 
     def initialize

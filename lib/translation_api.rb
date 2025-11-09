@@ -2,6 +2,8 @@
 
 require_relative "translation_api/version"
 require_relative "translation_api/config"
+require_relative "translation_api/provider/openai"
+require_relative "translation_api/provider/deepl"
 
 class TranslationAPI
   def self.config
