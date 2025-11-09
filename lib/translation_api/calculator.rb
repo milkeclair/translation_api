@@ -6,7 +6,7 @@ module TranslationAPI
   class Calculator
     class ArgumentError < StandardError; end
     MODEL_ERROR_MESSAGE =
-      "設定に無いモデルです。.envを確認してください。"
+      "Specified model is not supported. Please check the model name."
 
     # トークン数から利用料金を計算する
     #
@@ -14,7 +14,7 @@ module TranslationAPI
     # @param [String] token_type トークンの種類
     # @return [Float] 利用料金
     def self.calc_total_cost(used_tokens, token_type)
-      model = ENV["OPENAI_MODEL"] || "gpt-4o-mini"
+      model = ENV["OPENAI_MODEL"] || "gpt-5-mini"
       rate = get_token_rate(model, token_type)
       used_tokens * rate
     end
@@ -36,29 +36,18 @@ module TranslationAPI
     # @return [Hash] トークン単価のハッシュ
     def self.token_rate_hash
       one_million = 1_000_000
+
       {
-        "gpt-4o" => {
-          input: 5.0 / one_million,
-          output: 15.0 / one_million
-        },
-        "gpt-4o-2024-08-06" => {
-          input: 2.5 / one_million,
+        "gpt-5" => {
+          input: 1.25 / one_million,
           output: 10.0 / one_million
         },
-        "gpt-4o-mini" => {
-          input: 0.15 / one_million,
-          output: 0.6 / one_million
+        "gpt-5-mini" => {
+          input: 0.25 / one_million,
+          output: 2.0 / one_million
         },
-        "gpt-4.1" => {
-          input: 2.0 / one_million,
-          output: 8.0 / one_million
-        },
-        "gpt-4.1-mini" => {
-          input: 0.4 / one_million,
-          output: 1.6 / one_million
-        },
-        "gpt-4.1-nano" => {
-          input: 0.1 / one_million,
+        "gpt-5-nano" => {
+          input: 0.05 / one_million,
           output: 0.4 / one_million
         }
       }
