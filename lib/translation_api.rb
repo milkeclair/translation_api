@@ -61,8 +61,4 @@ class TranslationAPI
       raise "Unsupported provider: #{provider}"
     end
   end
-
-  def camelize(str)
-    str.split("_").map(&:capitalize).join
-  end
 end
