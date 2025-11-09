@@ -1,87 +1,84 @@
 # frozen_string_literal: true
 
-require "dotenv"
 require "openai"
-require_relative "writer"
+require_relative "openai/log"
 
 class TranslationAPI
   module Provider
     class OpenAI
-      SYSTEM_CONTENT_BASE = <<~TEXT
+      SYSTEM_PROMPT_BASE = <<~TEXT
         Translate only.
         Return result only, no extra info
         Keep symbols
       TEXT
 
-      # OpenAI APIを使用してテキストを翻訳する
-      #
-      # @param [Boolean] output_logs ログを出力するかどうか
-      # @param [Array<String>] except_words 除外する単語のリスト
-      # @param [String] language 翻訳先の言語
-      # @return [void]
-      def initialize(output_logs: true, except_words: [], language: "japanese")
-        # 環境変数の読み込み
-        Dotenv.load
-        raise "API key is not found" unless ENV["OPENAI_API_KEY"]
+      API_KEY_ERROR_MESSAGE = "API key is not found."
 
-        @client = ::OpenAI::Client.new(
-          access_token: ENV["OPENAI_API_KEY"],
-          log_errors: true # 好み
-        )
-        @output_logs = output_logs
-        @system_content = SYSTEM_CONTENT_BASE + except_option_text(except_words)
-        @language = language
+      MODEL_ERROR_MESSAGE =
+        "Specified model is not supported. Please check the model name."
+
+      def initialize(output_logs:, except_words:, language:)
+        validate_api_key!
+
+        @client = init_client
+        @output_logs   = output_logs
+        @system_prompt = SYSTEM_PROMPT_BASE + except_option_text(except_words)
+        @user_prompt   = user_prompt_text(language)
       end
 
-      # テキストを日本語に翻訳し、結果をファイルに書き込む
-      #
-      # @param [String] text 翻訳するテキスト
-      # @return [void]
       def translate(text)
-        # 空白文字は翻訳する必要がない
         return text if text.strip.empty?
 
-        response = chat_to_api(text)
-        Writer.write_logs(self, response) if @output_logs
+        @response = chat_to_api(text)
+        Log.new(self).write if @output_logs
 
-        response["choices"][0]["message"]["content"]
+        translated_text
       end
 
-      # レスポンスから使用したトークン数を取得する
-      #
-      # @param [Hash] response OpenAI APIからのレスポンス
-      # @param [String] token_type トークンの種類 (input or output)
-      # @return [Integer] 使用したトークン数
-      def self.dig_used_tokens(response, token_type)
-        if token_type == "input"
-          response["usage"]["prompt_tokens"]
-        elsif token_type == "output"
-          response["usage"]["completion_tokens"]
+      def translated_text
+        @response["choices"][0]["message"]["content"]
+      end
+
+      def using_model
+        ENV["OPENAI_MODEL"] || "gpt-5-mini"
+      end
+
+      def dig_used_tokens(type:)
+        case type
+        when :input
+          @response["usage"]["prompt_tokens"]
+        when :output
+          @response["usage"]["completion_tokens"]
+        else
+          raise ArgumentError, "Invalid token type: #{type}"
         end
       end
 
       private
 
-      # OpenAI APIにテキストを送信し、翻訳結果を取得する
-      #
-      # @param [String] text 翻訳するテキスト
-      # @return [Hash] OpenAI APIからのレスポンス
+      def validate_api_key!
+        raise API_KEY_ERROR_MESSAGE unless ENV["OPENAI_API_KEY"]
+      end
+
+      def init_client
+        ::OpenAI::Client.new(
+          access_token: ENV["OPENAI_API_KEY"],
+          log_errors: true
+        )
+      end
+
       def chat_to_api(text)
         @client.chat(
           parameters: {
-            model: ENV["OPENAI_MODEL"] || "gpt-5-mini",
+            model: using_model,
             messages: [
-              { role: "system", content: @system_content },
-              { role: "user", content: user_prompt_text(text) }
+              { role: "system", content: @system_prompt },
+              { role: "user", content: @user_prompt + text }
             ]
           }
         )
       end
 
-      # 除外する単語を指定するプロンプト
-      #
-      # @param [Array<String>] except_words 除外する単語のリスト
-      # @return [String] 除外する単語を指定するテキスト
       def except_option_text(except_words)
         return "" if except_words.empty?
 
@@ -90,13 +87,9 @@ class TranslationAPI
         TEXT
       end
 
-      # ユーザー入力のプロンプト
-      #
-      # @param [String] text テキスト
-      # @return [String] ユーザー入力のプロンプト
-      def user_prompt_text(text)
+      def user_prompt_text(language)
         <<~TEXT
-          Please translate this text to #{@language}: #{text}
+          Please translate this text to #{language}:
         TEXT
       end
     end

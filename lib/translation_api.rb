@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "dotenv"
 require_relative "translation_api/version"
 require_relative "translation_api/config"
 require_relative "translation_api/provider/openai"
 require_relative "translation_api/provider/deepl"
 
 class TranslationAPI
+  Dotenv.load
+
   def self.config
     Config.instance
   end
@@ -14,8 +17,8 @@ class TranslationAPI
     Config.configure(&)
   end
 
-  def self.translate(text, ...)
-    new(...).translate(text)
+  def self.translate(text, **)
+    new(**).translate(text)
   end
 
   def initialize(
