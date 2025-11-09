@@ -87,16 +87,16 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  deepl-rb (~> 3.2.0)
-  dotenv (~> 3.1.8)
-  rake (~> 13.3.0)
-  rspec (~> 3.13.1)
-  rubocop (~> 1.78.0)
-  rubocop-rake (~> 0.7.1)
-  rubocop-rspec (~> 3.6.0)
-  ruby-openai (~> 8.1.0)
+  deepl-rb
+  dotenv
+  rake
+  rspec
+  rubocop
+  rubocop-rake
+  rubocop-rspec
+  ruby-openai
   translation_api!
-  yard (~> 0.9.37)
+  yard
 
 BUNDLED WITH
    2.5.23
