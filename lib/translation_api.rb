@@ -4,6 +4,10 @@ require_relative "translation_api/version"
 require_relative "translation_api/config"
 
 class TranslationAPI
+  def self.config
+    Config.instance
+  end
+
   def self.configure(&)
     Config.configure(&)
   end
@@ -13,13 +17,17 @@ class TranslationAPI
   end
 
   def initialize(
-    language:     Config.language,
-    provider:     Config.provider,
-    output_logs:  Config.output_logs,
-    except_words: Config.except_words
+    language:     config.language,
+    provider:     config.provider,
+    output_logs:  config.output_logs,
+    except_words: config.except_words
   )
     @language = language
     @provider = provider_class(provider).new(output_logs:, except_words:, language:)
+  end
+
+  def config
+    self.class.config
   end
 
   def translate(text)

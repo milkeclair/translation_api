@@ -12,11 +12,6 @@ class TranslationAPI
       instance.instance_exec(&)
     end
 
-    def self.language = instance.language
-    def self.provider = instance.provider
-    def self.output_logs  = instance.output_logs
-    def self.except_words = instance.except_words
-
     def initialize
       @language     = "japanese"
       @provider     = :openai
