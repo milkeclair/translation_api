@@ -22,8 +22,10 @@ class TranslationAPI
     output_logs:  config.output_logs,
     except_words: config.except_words
   )
-    @language = language
-    @provider = provider_class(provider).new(output_logs:, except_words:, language:)
+    @language     = language
+    @output_logs  = output_logs
+    @except_words = except_words
+    @provider     = init_provider(provider)
   end
 
   def config
@@ -36,12 +38,19 @@ class TranslationAPI
 
   private
 
-  def provider_class(provider)
+  def init_provider(provider)
     case provider
     when :openai
-      Provider::OpenAI
+      Provider::OpenAI.new(
+        output_logs: @output_logs,
+        except_words: @except_words,
+        language: @language
+      )
     when :deepl
-      Provider::DeepL
+      Provider::DeepL.new(
+        except_words: @except_words,
+        language: @language
+      )
     else
       raise "Unsupported provider: #{provider}"
     end
