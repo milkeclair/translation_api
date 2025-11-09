@@ -5,19 +5,14 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in jp-translator-from-gpt.gemspec
 gemspec
 
-gem "rake"
-
-gem "rspec"
-
-gem "rubocop"
-gem "rubocop-rake"
-gem "rubocop-rspec"
-
-gem "yard"
+gem "debug", require: false
+gem "rake", require: false
+gem "rspec", require: false
+gem "rubocop", require: false
+gem "rubocop-rake", require: false
+gem "rubocop-rspec", require: false
+gem "yard", require: false
 
 gem "deepl-rb"
-gem "ruby-openai"
-
 gem "dotenv"
-
-gem "nokogiri"
+gem "ruby-openai"
