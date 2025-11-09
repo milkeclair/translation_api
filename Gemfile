@@ -19,3 +19,5 @@ gem "deepl-rb"
 gem "ruby-openai"
 
 gem "dotenv"
+
+gem "nokogiri"
