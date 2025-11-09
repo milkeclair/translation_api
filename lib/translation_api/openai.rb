@@ -68,7 +68,7 @@ module TranslationAPI
     def chat_to_api(text)
       @client.chat(
         parameters: {
-          model: ENV["OPENAI_MODEL"] || "gpt-4o-mini",
+          model: ENV["OPENAI_MODEL"] || "gpt-5-mini",
           messages: [
             { role: "system", content: @system_content },
             { role: "user", content: user_prompt_text(text) }
