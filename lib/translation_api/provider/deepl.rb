@@ -6,17 +6,23 @@ require "deepl"
 class TranslationAPI
   module Provider
     class DeepL
-      SYSTEM_CONTENT_BASE = <<~TEXT
+      SYSTEM_PROMPT_BASE = <<~TEXT
         Keep symbols
       TEXT
 
-      def initialize(output_logs: true, except_words: [], language: "japanese", pro: false)
-        Dotenv.load
-        setup_deepl_config!(pro: pro)
-        @supported_languages = fetch_supported_languages
-        validate_supported!(language)
-        @system_content = SYSTEM_CONTENT_BASE + except_option_text(except_words)
-        @language = @supported_languages[language.to_sym]
+      API_KEY_ERROR_MESSAGE = "API key is not found."
+
+      LANGUAGE_UNSUPPORTED_MESSAGE = "This language is unsupported by DeepL."
+
+      def initialize(pro:, except_words: [], language: "japanese")
+        @pro = pro
+        @language = language
+
+        setup_deepl_config!
+        validate_supported_language!
+
+        @system_content = SYSTEM_PROMPT_BASE + except_option_text(except_words)
+        @language = supported_languages[language.to_sym]
       end
 
       def translate(text)
@@ -27,29 +33,30 @@ class TranslationAPI
 
       private
 
-      def setup_deepl_config!(pro:)
+      def setup_deepl_config!
         validate_api_key!
 
         ::DeepL.configure do |config|
           config.auth_key = ENV["DEEPL_API_KEY"] || ENV["DEEPL_AUTH_KEY"]
-          config.host = pro ? "https://api.deepl.com" : "https://api-free.deepl.com"
+          config.host = @pro ? "https://api.deepl.com" : "https://api-free.deepl.com"
         end
       end
 
-      def validate_supported!(lang)
-        raise "This language is unsupported by DeepL" unless supported?(lang)
-      end
-
       def validate_api_key!
-        raise "API key is not found" unless ENV["DEEPL_API_KEY"] || ENV["DEEPL_AUTH_KEY"]
+        raise API_KEY_ERROR_MESSAGE unless ENV["DEEPL_API_KEY"] || ENV["DEEPL_AUTH_KEY"]
       end
 
-      def fetch_supported_languages
-        ::DeepL.languages.to_h { |lang| [lang.name.downcase.to_sym, lang.code] }
+      def validate_supported_language!
+        raise LANGUAGE_UNSUPPORTED_MESSAGE unless supported_language?
       end
 
-      def supported?(lang)
-        @supported_languages.key?(lang.to_sym)
+      def supported_languages
+        @supported_languages ||=
+          ::DeepL.languages.to_h { [it.name.downcase.to_sym, it.code] }
+      end
+
+      def supported_language?
+        supported_languages.key?(@language.to_sym)
       end
 
       def except_option_text(except_words)

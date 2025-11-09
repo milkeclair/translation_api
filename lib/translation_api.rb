@@ -53,6 +53,7 @@ class TranslationAPI
       )
     when :deepl
       Provider::DeepL.new(
+        pro: config.deepl_pro,
         except_words: @except_words,
         language: @language
       )
