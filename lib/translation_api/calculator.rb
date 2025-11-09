@@ -2,7 +2,7 @@
 
 require_relative "writer"
 
-module TranslationAPI
+class TranslationAPI
   class Calculator
     class ArgumentError < StandardError; end
     MODEL_ERROR_MESSAGE =

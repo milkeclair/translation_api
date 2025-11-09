@@ -4,7 +4,7 @@ require "dotenv"
 require "openai"
 require_relative "writer"
 
-module TranslationAPI
+class TranslationAPI
   class OpenAI
     SYSTEM_CONTENT_BASE = <<~TEXT
       Translate only.

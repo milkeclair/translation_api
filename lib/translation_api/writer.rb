@@ -4,7 +4,7 @@ require "fileutils"
 require_relative "calculator"
 require_relative "openai"
 
-module TranslationAPI
+class TranslationAPI
   class Writer
     @agent = nil
 

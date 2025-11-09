@@ -4,7 +4,7 @@ require_relative "writer"
 require_relative "openai"
 require_relative "deepl"
 
-module TranslationAPI
+class TranslationAPI
   class Mediator
     # @param [Boolean] output_logs ログを出力するかどうか
     # @param [String] language 翻訳先の言語

@@ -3,7 +3,7 @@
 require "dotenv"
 require "deepl"
 
-module TranslationAPI
+class TranslationAPI
   class DeepL
     SYSTEM_CONTENT_BASE = <<~TEXT
       Keep symbols
