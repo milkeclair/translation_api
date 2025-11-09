@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "lib/translation_api/mediator"
+require_relative "lib/translation_api"
 
 if ARGV.empty?
   puts "引数が必要です: ruby example.rb \"text\""
@@ -8,12 +8,11 @@ if ARGV.empty?
 end
 
 text = ARGV.join(" ")
-translator =
-  TranslationAPI::Mediator.new(
-    output_logs: true,
-    language: "japanese",
-    agent: :openai,
-    except_words: %w[hoge fuga]
-  )
-translated_text = translator.translate(text)
+TranslationAPI.configure do |config|
+  config.language     = "english"
+  config.provider     = :deepl
+  config.except_words = %w[hoge fuga]
+end
+
+translated_text = TranslationAPI.translate(text)
 p translated_text

@@ -7,14 +7,14 @@ Requires api key.
 
 1. `touch .env`
 2. Add `OPENAI_API_KEY=YOUR_API_KEY`  
-3. Optional: `ENV["OPENAI_MODEL"]`(default: gpt-4o-mini)
-4. `TranslationAPI::Mediator.new.translate("text")`
+3. Optional: `ENV["OPENAI_MODEL"]`
+4. `TranslationAPI.translate("text")`
 
-### Init Options
+### Configuration Options
 
 * output_logs (default: true)  
 * language (default: "japanese")  
-* agent (default: :openai)  
+* provider (default: :openai)  
 * except_words (default: [])  
 
 ### Output
@@ -26,3 +26,14 @@ Requires api key.
 ## Example
 
 Exec `ruby example.rb "text"`
+
+```ruby
+TranslationAPI.configure do |config|
+  config.language     = "english"
+  config.provider     = :deepl
+  config.output_logs  = false
+  config.except_words = %w[hoge fuga]
+end
+
+TranslationAPI.translate("text")
+```

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module TranslationAPI
-  VERSION = "0.2.0"
+class TranslationAPI
+  VERSION = "1.0.0"
 end
