@@ -7,6 +7,8 @@ require_relative "translation_api/provider/openai"
 require_relative "translation_api/provider/deepl"
 
 class TranslationAPI
+  UNSUPPORTED_PROVIDER_MESSAGE = "This provider is unsupported."
+
   Dotenv.load
 
   def self.config
@@ -58,7 +60,7 @@ class TranslationAPI
         language: @language
       )
     else
-      raise "Unsupported provider: #{provider}"
+      raise UNSUPPORTED_PROVIDER_MESSAGE
     end
   end
 end
