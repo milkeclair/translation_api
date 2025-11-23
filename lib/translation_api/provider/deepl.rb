@@ -14,14 +14,15 @@ class TranslationAPI
 
       LANGUAGE_UNSUPPORTED_MESSAGE = "This language is unsupported by DeepL."
 
-      def initialize(pro:, except_words: [], language: "japanese")
+      def initialize(pro:, except_words: [], language: "japanese", custom_prompt: nil)
         @pro = pro
         @language = language
 
         setup_deepl_config!
         validate_supported_language!
 
-        @system_content = SYSTEM_PROMPT_BASE + except_option_text(except_words)
+        @system_content =
+          SYSTEM_PROMPT_BASE + except_option_text(except_words) + user_prompt_text(custom_prompt)
         @language = supported_languages[language.to_sym]
       end
 
@@ -64,6 +65,14 @@ class TranslationAPI
 
         <<~TEXT
           Words listed next are not translated: [#{except_words.join(", ")}]
+        TEXT
+      end
+
+      def user_prompt_text(custom_prompt)
+        return "" unless custom_prompt
+
+        <<~TEXT
+          #{custom_prompt}
         TEXT
       end
     end

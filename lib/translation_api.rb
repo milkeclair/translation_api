@@ -56,13 +56,15 @@ class TranslationAPI
       Provider::OpenAI.new(
         output_logs: @output_logs,
         except_words: @except_words,
-        language: @language
+        language: @language,
+        custom_prompt: @custom_prompt
       )
     when :deepl
       Provider::DeepL.new(
         pro: config.deepl_pro,
         except_words: @except_words,
-        language: @language
+        language: @language,
+        custom_prompt: @custom_prompt
       )
     else
       raise UNSUPPORTED_PROVIDER_MESSAGE

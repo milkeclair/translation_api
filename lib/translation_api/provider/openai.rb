@@ -17,13 +17,13 @@ class TranslationAPI
       MODEL_ERROR_MESSAGE =
         "Specified model is not supported. Please check the model name."
 
-      def initialize(output_logs:, except_words:, language:)
+      def initialize(output_logs:, except_words:, language:, custom_prompt: nil)
         validate_api_key!
 
         @client = init_client
         @output_logs   = output_logs
         @system_prompt = SYSTEM_PROMPT_BASE + except_option_text(except_words)
-        @user_prompt   = user_prompt_text(language)
+        @user_prompt   = user_prompt_text(language, custom_prompt)
       end
 
       def translate(text)
@@ -87,8 +87,9 @@ class TranslationAPI
         TEXT
       end
 
-      def user_prompt_text(language)
+      def user_prompt_text(language, custom_prompt)
         <<~TEXT
+          #{custom_prompt || ""}
           Please translate this text to #{language}:
         TEXT
       end
