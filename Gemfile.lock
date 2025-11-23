@@ -114,6 +114,7 @@ DEPENDENCIES
   debug
   deepl-rb
   dotenv
+  faraday
   rake
   rspec
   rubocop

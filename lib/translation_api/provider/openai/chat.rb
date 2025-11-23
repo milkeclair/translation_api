@@ -36,8 +36,6 @@ class TranslationAPI
         end
 
         def init_client
-          validate_api_key!
-
           ::OpenAI::Client.new(access_token: ENV["OPENAI_API_KEY"])
         end
 

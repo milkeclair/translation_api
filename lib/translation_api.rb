@@ -4,6 +4,7 @@ require "dotenv"
 require_relative "translation_api/version"
 require_relative "translation_api/config"
 require_relative "translation_api/provider/openai"
+require_relative "translation_api/provider/gemini"
 require_relative "translation_api/provider/deepl"
 
 class TranslationAPI
@@ -57,6 +58,13 @@ class TranslationAPI
     case provider
     when :openai
       Provider::OpenAI.new(
+        output_logs: @output_logs,
+        except_words: @except_words,
+        language: @language,
+        custom_prompt: @custom_prompt
+      )
+    when :gemini
+      Provider::Gemini.new(
         output_logs: @output_logs,
         except_words: @except_words,
         language: @language,

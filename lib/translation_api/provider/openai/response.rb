@@ -9,15 +9,15 @@ class TranslationAPI
         end
 
         def translated_text
-          @response["choices"][0]["message"]["content"]
+          @response.dig("choices", 0, "message", "content")
         end
 
         def dig_used_tokens(type:)
           case type
           when :input
-            @response["usage"]["prompt_tokens"]
+            @response.dig("usage", "prompt_tokens")
           when :output
-            @response["usage"]["completion_tokens"]
+            @response.dig("usage", "completion_tokens")
           else
             raise ArgumentError, "Invalid token type: #{type}"
           end

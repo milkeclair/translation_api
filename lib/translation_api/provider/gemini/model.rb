@@ -4,24 +4,29 @@ require_relative "../../llm/model"
 
 class TranslationAPI
   module Provider
-    class OpenAI
+    class Gemini
       class Model < Llm::Model
         SUPPORTED_MODELS = [
-          "gpt-5",
-          "gpt-5-mini",
-          "gpt-5-nano"
+          "gemini-3-pro-preview",
+          "gemini-2.5-pro",
+          "gemini-2.5-flash",
+          "gemini-2.5-flash-lite"
         ].freeze
 
-        def self.base
+        def self.three_pro
           SUPPORTED_MODELS[0]
         end
 
-        def self.mini
+        def self.two_five_pro
           SUPPORTED_MODELS[1]
         end
 
-        def self.nano
+        def self.two_five_flash
           SUPPORTED_MODELS[2]
+        end
+
+        def self.two_five_flash_lite
+          SUPPORTED_MODELS[3]
         end
       end
     end

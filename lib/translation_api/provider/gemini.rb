@@ -2,15 +2,15 @@
 
 require_relative "../llm/prompt"
 require_relative "../llm/log"
-require_relative "openai/model"
-require_relative "openai/chat"
-require_relative "openai/cost"
+require_relative "gemini/model"
+require_relative "gemini/chat"
+require_relative "gemini/cost"
 
 class TranslationAPI
   module Provider
-    class OpenAI
+    class Gemini
       def initialize(output_logs:, except_words:, language:, custom_prompt: nil)
-        @model  = Model.new(ENV["OPENAI_MODEL"] || Model.nano)
+        @model  = Model.new(ENV["GEMINI_MODEL"] || Model.two_five_flash)
         @prompt = Llm::Prompt.new(except_words:, language:, custom_prompt:)
         @chat   = Chat.new(model: @model, prompt: @prompt)
         @output_logs = output_logs
@@ -26,7 +26,7 @@ class TranslationAPI
       end
 
       def name
-        "openai"
+        "gemini"
       end
 
       private
