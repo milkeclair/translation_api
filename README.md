@@ -21,7 +21,7 @@ Requires api key.
 * deepl_pro (default: false)
   * Only for DeepL
 
-### Output(Only for OpenAI)
+### Output(Only for OpenAI and Gemini)
 
 * Translated_text
 * Used Tokens
