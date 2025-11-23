@@ -16,7 +16,7 @@ class TranslationAPI
 
         def translated_text
           failed_message = "#{REQUEST_FAILED_MESSAGE} #{@response.status}"
-          raise failed_message unless @response.status == 200
+          raise ArgumentError, failed_message unless @response.status == 200
 
           body_json.dig("candidates", 0, "content", "parts", 0, "text")
         end

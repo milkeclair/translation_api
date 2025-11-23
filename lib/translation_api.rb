@@ -77,7 +77,7 @@ class TranslationAPI
         language: @language
       )
     else
-      raise UNSUPPORTED_PROVIDER_MESSAGE
+      raise ArgumentError, UNSUPPORTED_PROVIDER_MESSAGE
     end
   end
 end

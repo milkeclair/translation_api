@@ -40,7 +40,7 @@ class TranslationAPI
         end
 
         def validate_api_key!
-          raise API_KEY_ERROR_MESSAGE unless ENV["OPENAI_API_KEY"]
+          raise ArgumentError, API_KEY_ERROR_MESSAGE unless ENV["OPENAI_API_KEY"]
         end
       end
     end

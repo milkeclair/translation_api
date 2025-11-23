@@ -19,7 +19,7 @@ class TranslationAPI
         supported_models =
           self.class.const_defined?(:SUPPORTED_MODELS) ? self.class::SUPPORTED_MODELS : []
 
-        raise MODEL_ERROR_MESSAGE unless supported_models.include?(@name)
+        raise ArgumentError, MODEL_ERROR_MESSAGE unless supported_models.include?(@name)
       end
     end
   end
