@@ -7,9 +7,9 @@ class TranslationAPI
   module Provider
     class OpenAI
       class Log
-        def initialize(provider)
-          @provider = provider
-          @cost = Cost.new(@provider)
+        def initialize(model:, response:)
+          @response = response
+          @cost     = Cost.new(model)
         end
 
         def write
@@ -24,7 +24,7 @@ class TranslationAPI
           log_file_path = text_path("translated_text.txt")
 
           File.open(log_file_path, "a") do |file|
-            file.puts(@provider.translated_text)
+            file.puts(@response.translated_text)
           end
         end
 
@@ -82,8 +82,8 @@ class TranslationAPI
 
         def tokens
           {
-            input_tokens: @provider.dig_used_tokens(type: :input),
-            output_tokens: @provider.dig_used_tokens(type: :output)
+            input_tokens: @response.dig_used_tokens(type: :input),
+            output_tokens: @response.dig_used_tokens(type: :output)
           }
         end
 
