@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "faraday"
+require "json"
 require_relative "response"
 
 class TranslationAPI
