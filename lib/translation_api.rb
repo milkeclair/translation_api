@@ -5,6 +5,7 @@ require_relative "translation_api/version"
 require_relative "translation_api/config"
 require_relative "translation_api/provider/openai"
 require_relative "translation_api/provider/deepl"
+require "debug"
 
 class TranslationAPI
   UNSUPPORTED_PROVIDER_MESSAGE = "This provider is unsupported."
@@ -24,7 +25,9 @@ class TranslationAPI
   end
 
   def initialize(**options)
-    init_options(options)
+    use_provided_options(options)
+    use_default_options
+
     @provider = init_provider(@provider)
   end
 
@@ -38,15 +41,16 @@ class TranslationAPI
 
   private
 
-  def init_options(options)
+  def use_provided_options(options)
     options.each do |key, value|
-      raise ArgumentError, "Unknown configuration option: #{key}" unless self.class.config.respond_to?(key)
+      instance_variable_set("@#{key}", value)
+    end
+  end
 
-      if value
-        instance_variable_set("@#{key}", value)
-      else
-        instance_variable_set("@#{key}", self.class.config.send(key))
-      end
+  def use_default_options
+    self.class.config.instance_variables.each do |var|
+      key = var.to_s.delete_prefix("@").to_sym
+      instance_variable_set("@#{key}", self.class.config.send(key))
     end
   end
 
