@@ -43,11 +43,11 @@ class TranslationAPI
       end
 
       def validate_api_key!
-        raise API_KEY_ERROR_MESSAGE unless ENV["DEEPL_API_KEY"] || ENV["DEEPL_AUTH_KEY"]
+        raise ArgumentError, API_KEY_ERROR_MESSAGE unless ENV["DEEPL_API_KEY"] || ENV["DEEPL_AUTH_KEY"]
       end
 
       def validate_supported_language!
-        raise LANGUAGE_UNSUPPORTED_MESSAGE unless supported_language?
+        raise ArgumentError, LANGUAGE_UNSUPPORTED_MESSAGE unless supported_language?
       end
 
       def supported_languages

@@ -16,5 +16,10 @@ TranslationAPI.configure do |config|
   config.custom_prompt = "Please Samurai style."
 end
 
-translated_text = TranslationAPI.translate(text)
-p translated_text
+begin
+  translated_text = TranslationAPI.translate(text)
+  p translated_text
+rescue StandardError => e
+  puts e
+  puts e.backtrace
+end

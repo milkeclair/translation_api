@@ -1,9 +1,10 @@
 PATH
   remote: .
   specs:
-    translation_api (1.1.1)
+    translation_api (1.2.0)
       deepl-rb
       dotenv
+      faraday
       ruby-openai
 
 GEM
@@ -114,6 +115,7 @@ DEPENDENCIES
   debug
   deepl-rb
   dotenv
+  faraday
   rake
   rspec
   rubocop

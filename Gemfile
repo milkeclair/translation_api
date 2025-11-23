@@ -15,4 +15,5 @@ gem "yard", require: false
 
 gem "deepl-rb"
 gem "dotenv"
+gem "faraday"
 gem "ruby-openai"

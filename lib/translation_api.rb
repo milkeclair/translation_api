@@ -4,6 +4,7 @@ require "dotenv"
 require_relative "translation_api/version"
 require_relative "translation_api/config"
 require_relative "translation_api/provider/openai"
+require_relative "translation_api/provider/gemini"
 require_relative "translation_api/provider/deepl"
 
 class TranslationAPI
@@ -62,6 +63,13 @@ class TranslationAPI
         language: @language,
         custom_prompt: @custom_prompt
       )
+    when :gemini
+      Provider::Gemini.new(
+        output_logs: @output_logs,
+        except_words: @except_words,
+        language: @language,
+        custom_prompt: @custom_prompt
+      )
     when :deepl
       Provider::DeepL.new(
         pro: config.deepl_pro,
@@ -69,7 +77,7 @@ class TranslationAPI
         language: @language
       )
     else
-      raise UNSUPPORTED_PROVIDER_MESSAGE
+      raise ArgumentError, UNSUPPORTED_PROVIDER_MESSAGE
     end
   end
 end
