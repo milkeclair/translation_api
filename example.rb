@@ -9,9 +9,11 @@ end
 
 text = ARGV.join(" ")
 TranslationAPI.configure do |config|
-  config.language     = "english"
-  config.provider     = :deepl
-  config.except_words = %w[hoge fuga]
+  config.language      = "english"
+  config.provider      = :openai
+  config.output_logs   = false
+  config.except_words  = %w[hoge fuga]
+  config.custom_prompt = "Please Samurai style."
 end
 
 translated_text = TranslationAPI.translate(text)

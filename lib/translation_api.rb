@@ -23,16 +23,11 @@ class TranslationAPI
     new(**).translate(text)
   end
 
-  def initialize(
-    language:     config.language,
-    provider:     config.provider,
-    output_logs:  config.output_logs,
-    except_words: config.except_words
-  )
-    @language     = language
-    @output_logs  = output_logs
-    @except_words = except_words
-    @provider     = init_provider(provider)
+  def initialize(**options)
+    use_default_options
+    use_provided_options(options)
+
+    @provider = init_provider(@provider)
   end
 
   def config
@@ -45,13 +40,27 @@ class TranslationAPI
 
   private
 
+  def use_provided_options(options)
+    options.each do |key, value|
+      instance_variable_set("@#{key}", value)
+    end
+  end
+
+  def use_default_options
+    self.class.config.instance_variables.each do |var|
+      key = var.to_s.delete_prefix("@").to_sym
+      instance_variable_set("@#{key}", self.class.config.send(key))
+    end
+  end
+
   def init_provider(provider)
     case provider
     when :openai
       Provider::OpenAI.new(
         output_logs: @output_logs,
         except_words: @except_words,
-        language: @language
+        language: @language,
+        custom_prompt: @custom_prompt
       )
     when :deepl
       Provider::DeepL.new(
