@@ -5,7 +5,6 @@ require_relative "translation_api/version"
 require_relative "translation_api/config"
 require_relative "translation_api/provider/openai"
 require_relative "translation_api/provider/deepl"
-require "debug"
 
 class TranslationAPI
   UNSUPPORTED_PROVIDER_MESSAGE = "This provider is unsupported."
@@ -67,8 +66,7 @@ class TranslationAPI
       Provider::DeepL.new(
         pro: config.deepl_pro,
         except_words: @except_words,
-        language: @language,
-        custom_prompt: @custom_prompt
+        language: @language
       )
     else
       raise UNSUPPORTED_PROVIDER_MESSAGE
