@@ -24,8 +24,8 @@ class TranslationAPI
   end
 
   def initialize(**options)
-    use_provided_options(options)
     use_default_options
+    use_provided_options(options)
 
     @provider = init_provider(@provider)
   end
