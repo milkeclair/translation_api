@@ -23,16 +23,9 @@ class TranslationAPI
     new(**).translate(text)
   end
 
-  def initialize(
-    language:     config.language,
-    provider:     config.provider,
-    output_logs:  config.output_logs,
-    except_words: config.except_words
-  )
-    @language     = language
-    @output_logs  = output_logs
-    @except_words = except_words
-    @provider     = init_provider(provider)
+  def initialize(**options)
+    init_options(options)
+    @provider = init_provider(@provider)
   end
 
   def config
@@ -44,6 +37,18 @@ class TranslationAPI
   end
 
   private
+
+  def init_options(options)
+    options.each do |key, value|
+      raise ArgumentError, "Unknown configuration option: #{key}" unless self.class.config.respond_to?(key)
+
+      if value
+        instance_variable_set("@#{key}", value)
+      else
+        instance_variable_set("@#{key}", self.class.config.send(key))
+      end
+    end
+  end
 
   def init_provider(provider)
     case provider
